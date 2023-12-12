@@ -1,0 +1,30 @@
+import sys
+from pptx import Presentation
+
+def pptx_to_text(file_path):
+    prs = Presentation(file_path)
+    text = ''
+
+    for slide in prs.slides:
+        for shape in slide.shapes:
+            if hasattr(shape, "text"):
+                text += shape.text + "\n"
+
+    return text
+
+def save_text_to_file(text, output_file):
+    if not output_file.endswith('.txt'):
+        output_file += '.txt'
+    with open(output_file, 'w', encoding='utf-8') as file:
+        file.write(text)
+    print(f'The extracted text has been saved to {output_file}')
+
+if __name__ == "__main__":
+    if len(sys.argv) < 3:
+        print("Usage: python script.py <pptx_file_path> <output_file_name>")
+        sys.exit(1)
+
+    pptx_file = sys.argv[1]
+    output_file = sys.argv[2]
+    pptx_text = pptx_to_text(pptx_file)
+    save_text_to_file(pptx_text, output_file)
